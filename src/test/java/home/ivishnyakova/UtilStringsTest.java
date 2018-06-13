@@ -1,6 +1,7 @@
 package home.ivishnyakova;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.*;
@@ -14,16 +15,17 @@ import static org.hamcrest.core.IsEqual.equalTo;
 
 public class UtilStringsTest {
 
-    private List<String> nullList = null;
-    private List<String> emptyList, emptyStringList;
+    private static List<String> nullList;
+    private static List<String> emptyList, emptyStringList;
+
     private List<String> singleList;
     private List<String> oneList0;
     private List<String> oneList1;
     private List<String> oneList2;
     private List<String> moreOneList;
 
-    @Before
-    public void setUpMaxString(){
+    @BeforeClass
+    public static void setUpClass(){
         nullList = null;
         emptyList = Collections.emptyList();
         emptyStringList = Collections.singletonList("");
@@ -31,17 +33,48 @@ public class UtilStringsTest {
 
     /*Набор тестов для проверки метода getMaxStringLength - максимальная по длине строка*/
     @Test(expected = IllegalArgumentException.class)
-    public void testMaxStringWithException(){
+    public void testGetMaxStringLength_Null_Exception(){
         assertThat("Source is null", UtilStrings.getMaxStringLength(nullList), equalTo(Optional.empty()));
     }
 
     /*Набор тестов для проверки метода getMaxStringLength - максимальная по длине строка*/
     @Test
-    public void testMaxString(){
+    public void testGetMaxStringLength_EmptyList_Empty(){
+        assertThat("Source is empty", UtilStrings.getMaxStringLength(emptyList), equalTo(Optional.empty()));
+    }
+    @Test
+    public void testGetMaxStringLength_EmptyString_Empty(){
+        assertThat("Source is empty string", UtilStrings.getMaxStringLength(emptyStringList), equalTo(Optional.of("")));
+    }
+    @Test
+    public void testGetMaxStringLength_OneString_ThisString(){
         singleList = Collections.singletonList("отдых");
+        assertThat("Source is one string", UtilStrings.getMaxStringLength(singleList), equalTo(Optional.of(singleList.get(0))));
+    }
+    @Test
+    public void testGetMaxStringLength_DiffStringsByLength_FirstString(){
         oneList0 = Arrays.asList("прекрасная погода", "морской бриз",  "Крымские горы");
+        assertThat("Source is text, that contains the first max row",
+                UtilStrings.getMaxStringLength(oneList0),
+                equalTo(Optional.of(oneList0.get(0))));
+    }
+    @Test
+    public void testGetMaxStringLength_DiffStringsByLength_MiddleString(){
         oneList1 = Arrays.asList("морской бриз", "прекрасная погода", "Крымские горы");
+        assertThat("Source is text, that contains the max row in middle",
+                UtilStrings.getMaxStringLength(oneList1),
+                equalTo(Optional.of(oneList1.get(1))));
+    }
+    @Test
+    public void testGetMaxStringLength_DiffStringsByLength_LastString(){
         oneList2 = Arrays.asList("морской бриз", "Крымские горы", "погода прекрасная");
+        assertThat("Source is text, that contains the last max row",
+                UtilStrings.getMaxStringLength(oneList2),
+                equalTo(Optional.of(oneList2.get(2))));
+    }
+
+    @Test
+    public void testGetMaxStringLength_SomeStringsEqualsByLength_2Strings(){
         moreOneList = Arrays.asList(
                 "В Украине есть две горные системы",
                 "- Карпаты и Крымские горы.",
@@ -49,23 +82,6 @@ public class UtilStringsTest {
                 "молодые, им более 25 миллионов лет",
                 "Например, в Карпатах находится до ",
                 "20% всех лесов Украины.");
-
-        assertThat("Source is empty", UtilStrings.getMaxStringLength(emptyList), equalTo(Optional.empty()));
-        assertThat("Source is empty string", UtilStrings.getMaxStringLength(emptyStringList), equalTo(Optional.of("")));
-        assertThat("Source is one word", UtilStrings.getMaxStringLength(singleList), equalTo(Optional.of(singleList.get(0))));
-
-        assertThat("Source is text, that contains the first max row",
-                UtilStrings.getMaxStringLength(oneList0),
-                equalTo(Optional.of(oneList0.get(0))));
-
-        assertThat("Source is text, that contains the max row in middle",
-                UtilStrings.getMaxStringLength(oneList1),
-                equalTo(Optional.of(oneList1.get(1))));
-
-        assertThat("Source is text, that contains the last max row",
-                UtilStrings.getMaxStringLength(oneList2),
-                equalTo(Optional.of(oneList2.get(2))));
-
         assertThat("Source is text, that contains the several rows with max length",
                 UtilStrings.getMaxStringLength(moreOneList),
                 anyOf(equalTo(Optional.of(moreOneList.get(3))),equalTo(Optional.of(moreOneList.get(4)))));
