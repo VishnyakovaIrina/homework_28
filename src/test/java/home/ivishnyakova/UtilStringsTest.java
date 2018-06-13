@@ -17,12 +17,23 @@ public class UtilStringsTest {
 
     private static List<String> nullList;
     private static List<String> emptyList, emptyStringList;
+    private static List<String> textSource;
+    private static String stringSource;
 
     @BeforeClass
     public static void setUpClass(){
         nullList = null;
         emptyList = Collections.emptyList();
         emptyStringList = Collections.singletonList("");
+
+        textSource =  Arrays.asList(
+                "В Украине есть две горные системы - Карпаты и Крымские горы.",
+                "Карпатские горы относительно молодые,",
+                "им более 25 миллионов лет.",
+                "Например, в Карпатах находится до 20%",
+                "всех лесов Украины.");
+
+        stringSource = "Самая высокая гора Украинских Карпат – гора Говерла";
     }
 
     /*Набор тестов для проверки метода getMaxStringLength - максимальная по длине строка*/
@@ -291,77 +302,89 @@ public class UtilStringsTest {
 
     /*Набор тестов для проверки метода getWordNumberOccurrences, которые генерируют исключение*/
     @Test(expected = IllegalArgumentException.class)
-    public void testWordCountWithException0() {
+    public void testGetWordNumberOccurrences_DblNull_Exception() {
         assertThat("Text source and search line are null",
                 UtilStrings.getWordNumberOccurrences(nullList, null),
                 equalTo(0L));
     }
     @Test(expected = IllegalArgumentException.class)
-    public void testWordCountWithException1() {
+    public void testGetWordNumberOccurrences_NullAndEmpty_Exception() {
         assertThat("Text source is null, search line is empty",
                 UtilStrings.getWordNumberOccurrences(nullList, ""),
                 equalTo(0L));
     }
     @Test(expected = IllegalArgumentException.class)
-    public void testWordCountWithException2() {
+    public void testGetWordNumberOccurrences_NullAndBlank_Exception() {
         assertThat("Text source is null, search line is blank",
                 UtilStrings.getWordNumberOccurrences(nullList, " "),
                 equalTo(0L));
     }
     @Test(expected = IllegalArgumentException.class)
-    public void testWordCountWithException3() {
+    public void testGetWordNumberOccurrences_NullAndWord_Exception() {
         assertThat("Text source is null, search line is one word",
                 UtilStrings.getWordNumberOccurrences(nullList, "горы"),
                 equalTo(0L));
     }
     @Test(expected = IllegalArgumentException.class)
-    public void testWordCountWithException4() {
+    public void testGetWordNumberOccurrences_EmptyListAndNull_Exception() {
         assertThat("Text source is empty, search line is null",
                 UtilStrings.getWordNumberOccurrences(emptyList, null),
                 equalTo(0L));
     }
     @Test(expected = IllegalArgumentException.class)
-    public void testWordCountWithException5() {
+    public void testGetWordNumberOccurrences_EmptyStringAndNull_Exception() {
         assertThat("Text source is empty line, search line is null",
                 UtilStrings.getWordNumberOccurrences(emptyStringList, null),
                 equalTo(0L));
     }
     @Test(expected = IllegalArgumentException.class)
-    public void testWordCountWithException6() {
+    public void testGetWordNumberOccurrences_WordAndNull_Exception() {
         assertThat("Text source is single word, search line is null",
                 UtilStrings.getWordNumberOccurrences(Collections.singletonList("горы"), null),
                 equalTo(0L));
     }
     @Test(expected = IllegalArgumentException.class)
-    public void testWordCountWithException7() {
+    public void testGetWordNumberOccurrences_StringsAndNull_Exception() {
         assertThat("Text source is not empty, search line is null",
-                UtilStrings.getWordNumberOccurrences(Arrays.asList("Самая высокая вершина крымских гор ","– гора Роман-Кош высотой 1945 м"), null),
+                UtilStrings.getWordNumberOccurrences(
+                        Arrays.asList("Самая высокая вершина крымских гор ","– гора Роман-Кош высотой 1945 м"),
+                        null),
                 equalTo(0L));
     }
 
     /*Набор тестов для проверки метода getWordNumberOccurrences, когда источник текста пуст*/
     @Test
-    public void testWordCountEmptySource(){
+    public void testGetWordNumberOccurrences_EmptyListAndEmpty_Zero() {
         assertThat("Text source is empty, search line is empty",
                 UtilStrings.getWordNumberOccurrences(emptyList, ""),
                 equalTo(0L));
-
+    }
+    @Test
+    public void testGetWordNumberOccurrences_EmptyListAndBlank_Zero() {
         assertThat("Text source is empty, search line is blank",
                 UtilStrings.getWordNumberOccurrences(emptyList, " "),
                 equalTo(0L));
-
+    }
+    @Test
+    public void testGetWordNumberOccurrences_EmptyListAndWord_Zero() {
         assertThat("Text source is empty, search line is not empty",
                 UtilStrings.getWordNumberOccurrences(emptyList, "горы"),
                 equalTo(0L));
-
+    }
+    @Test
+    public void testGetWordNumberOccurrences_EmptyStringAndEmpty_Zero() {
         assertThat("Text source is empty string, search line is empty",
                 UtilStrings.getWordNumberOccurrences(emptyStringList, ""),
                 equalTo(0L));
-
+    }
+    @Test
+    public void testGetWordNumberOccurrences_EmptyStringAndBlank_Zero() {
         assertThat("Text source is empty string, search line is blank",
                 UtilStrings.getWordNumberOccurrences(emptyStringList, " "),
                 equalTo(0L));
-
+    }
+    @Test
+    public void testGetWordNumberOccurrences_EmptyStringAndWord_Zero() {
         assertThat("Text source is empty string, search line is not empty",
                 UtilStrings.getWordNumberOccurrences(emptyStringList, "горы"),
                 equalTo(0L));
@@ -369,78 +392,108 @@ public class UtilStringsTest {
 
     /*Набор тестов для проверки метода getWordNumberOccurrences, когда источник содержит одно слово*/
     @Test
-    public void testWordCountSingleStringInSource(){
+    public void testGetWordNumberOccurrences_WordAndEmpty_Zero() {
         assertThat("Text source is one word, search line is empty",
                 UtilStrings.getWordNumberOccurrences(Collections.singletonList("горы"), ""),
                 equalTo(0L));
-
+    }
+    @Test
+    public void testGetWordNumberOccurrences_WordAndBlank_Zero() {
         assertThat("Text source is one word, search line is blank",
                 UtilStrings.getWordNumberOccurrences(Collections.singletonList("горы"), " "),
                 equalTo(0L));
-
+    }
+    @Test
+    public void testGetWordNumberOccurrences_WordsIsNotEquals_Zero() {
         assertThat("Text source is one word, search line is not in source",
                 UtilStrings.getWordNumberOccurrences(Collections.singletonList("море"), "горы"),
                 equalTo(0L));
-
+    }
+    @Test
+    public void testGetWordNumberOccurrences_WordsIsEquals_Once() {
         assertThat("Text source and search line is equals",
                 UtilStrings.getWordNumberOccurrences(Collections.singletonList("горы"), "горы"),
                 equalTo(1L));
     }
+    @Test
+    public void testGetWordNumberOccurrences_WordAndSeveralWords_Zero() {
+        assertThat("Text source is one word, search line is several words",
+                UtilStrings.getWordNumberOccurrences(Collections.singletonList("горы"), "высокая гора"),
+                equalTo(0L));
+    }
 
     /*Набор тестов для проверки метода getWordNumberOccurrences, когда источник содержит одну строку*/
     @Test
-    public void testWordCountSingleLineInSource(){
-        String source = "Самая высокая гора Украинских Карпат – гора Говерла";
+    public void testGetWordNumberOccurrences_OneStringAndEmpty_Zero() {
         assertThat("Text source is one string and search line is empty string",
-                UtilStrings.getWordNumberOccurrences(Collections.singletonList(source), ""),
+                UtilStrings.getWordNumberOccurrences(Collections.singletonList(stringSource), ""),
                 equalTo(0L));
-
+    }
+    @Test
+    public void testGetWordNumberOccurrences_OneStringAndBlank_Zero() {
         assertThat("Text source is one string and search line is empty blank",
-                UtilStrings.getWordNumberOccurrences(Collections.singletonList(source), " "),
+                UtilStrings.getWordNumberOccurrences(Collections.singletonList(stringSource), " "),
                 equalTo(0L));
-
+    }
+    @Test
+    public void testGetWordNumberOccurrences_OneStringAndString_Zero() {
         assertThat("Text source is one string and search line is not in source",
-                UtilStrings.getWordNumberOccurrences(Collections.singletonList(source), "горы"),
-                equalTo(0L));
-
+                UtilStrings.getWordNumberOccurrences(Collections.singletonList(stringSource), "горы"),
+                equalTo(0L));}
+    @Test
+    public void testGetWordNumberOccurrences_OneStringAndString_Once() {
         assertThat("Text source is one string and search line is in source once",
-                UtilStrings.getWordNumberOccurrences(Collections.singletonList(source), "высокая"),
+                UtilStrings.getWordNumberOccurrences(Collections.singletonList(stringSource), "высокая"),
                 equalTo(1L));
-
+    }
+    @Test
+    public void testGetWordNumberOccurrences_OneStringAndString_Twice() {
         assertThat("Text source is one string and search line is in source more than one time",
-                UtilStrings.getWordNumberOccurrences(Collections.singletonList(source), "гора"),
+                UtilStrings.getWordNumberOccurrences(Collections.singletonList(stringSource), "гора"),
                 equalTo(2L));
+    }
+    @Test
+    public void testGetWordNumberOccurrences_OneStringAndSeveralWords_Zero() {
+        assertThat("Text source is one string and search line (several words) is in source",
+                UtilStrings.getWordNumberOccurrences(Collections.singletonList(stringSource), "высокая гора"),
+                equalTo(0L));
     }
 
     /*Набор тестов для проверки метода getWordNumberOccurrences, когда источник содержит многострочный текст*/
     @Test
-    public void testWordNumberOccurrences(){
-        List<String> source =  Arrays.asList(
-                "В Украине есть две горные системы - Карпаты и Крымские горы.",
-                "Карпатские горы относительно молодые,",
-                "им более 25 миллионов лет.",
-                "Например, в Карпатах находится до 20%",
-                "всех лесов Украины.");
-
+    public void testGetWordNumberOccurrences_StringsAndString_Zero() {
         assertThat("Text source is text and search line is not in text",
-                UtilStrings.getWordNumberOccurrences(source, "лето"),
-                equalTo(0L));
-
-        assertThat("Text source is text and search line is in text only once",
-                UtilStrings.getWordNumberOccurrences(source, "Карпаты"),
-                equalTo(1L));
-
-        assertThat("Text source is text and search line is in text only twice",
-                UtilStrings.getWordNumberOccurrences(source, "горы"),
-                equalTo(2L));
-
-        assertThat("Text source is text and search line is empty string",
-                UtilStrings.getWordNumberOccurrences(source, ""),
-                equalTo(0L));
-
-        assertThat("Text source is text and search line is blank",
-                UtilStrings.getWordNumberOccurrences(source, " "),
+                UtilStrings.getWordNumberOccurrences(textSource, "лето"),
                 equalTo(0L));
     }
-
+    @Test
+    public void testGetWordNumberOccurrences_StringsAndString_Once() {
+        assertThat("Text source is text and search line is in text only once",
+                UtilStrings.getWordNumberOccurrences(textSource, "Карпаты"),
+                equalTo(1L));
+    }
+    @Test
+    public void testGetWordNumberOccurrences_StringsAndString_Twice() {
+        assertThat("Text source is text and search line is in text only twice",
+                UtilStrings.getWordNumberOccurrences(textSource, "горы"),
+                equalTo(2L));
+    }
+    @Test
+    public void testGetWordNumberOccurrences_StringsAndEmpty_Zero() {
+        assertThat("Text source is text and search line is empty string",
+                UtilStrings.getWordNumberOccurrences(textSource, ""),
+                equalTo(0L));
+    }
+    @Test
+    public void testGetWordNumberOccurrences_StringsAndBlank_Zero() {
+        assertThat("Text source is text and search line is blank",
+                UtilStrings.getWordNumberOccurrences(textSource, " "),
+                equalTo(0L));
+    }
+    @Test
+    public void testGetWordNumberOccurrences_StringsAndSeveralWords_Zero() {
+        assertThat("Text source is text and search line (several words) is in text",
+                UtilStrings.getWordNumberOccurrences(textSource, "высокая гора"),
+                equalTo(0L));
+    }
 }
