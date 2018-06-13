@@ -48,34 +48,33 @@ public class UtilStringsTest {
     }
     @Test
     public void testGetMaxStringLength_OneString_ThisString(){
-        singleList = Collections.singletonList("отдых");
+        List<String> singleList = Collections.singletonList("отдых");
         assertThat("Source is one string", UtilStrings.getMaxStringLength(singleList), equalTo(Optional.of(singleList.get(0))));
     }
     @Test
     public void testGetMaxStringLength_DiffStringsByLength_FirstString(){
-        oneList0 = Arrays.asList("прекрасная погода", "морской бриз",  "Крымские горы");
+        List<String> strings = Arrays.asList("прекрасная погода", "морской бриз",  "Крымские горы");
         assertThat("Source is text, that contains the first max row",
-                UtilStrings.getMaxStringLength(oneList0),
-                equalTo(Optional.of(oneList0.get(0))));
+                UtilStrings.getMaxStringLength(strings),
+                equalTo(Optional.of(strings.get(0))));
     }
     @Test
     public void testGetMaxStringLength_DiffStringsByLength_MiddleString(){
-        oneList1 = Arrays.asList("морской бриз", "прекрасная погода", "Крымские горы");
+        List<String> strings = Arrays.asList("морской бриз", "прекрасная погода", "Крымские горы");
         assertThat("Source is text, that contains the max row in middle",
-                UtilStrings.getMaxStringLength(oneList1),
-                equalTo(Optional.of(oneList1.get(1))));
+                UtilStrings.getMaxStringLength(strings),
+                equalTo(Optional.of(strings.get(1))));
     }
     @Test
     public void testGetMaxStringLength_DiffStringsByLength_LastString(){
-        oneList2 = Arrays.asList("морской бриз", "Крымские горы", "погода прекрасная");
+        List<String> strings = Arrays.asList("морской бриз", "Крымские горы", "погода прекрасная");
         assertThat("Source is text, that contains the last max row",
-                UtilStrings.getMaxStringLength(oneList2),
-                equalTo(Optional.of(oneList2.get(2))));
+                UtilStrings.getMaxStringLength(strings),
+                equalTo(Optional.of(strings.get(2))));
     }
-
     @Test
     public void testGetMaxStringLength_SomeStringsEqualsByLength_2Strings(){
-        moreOneList = Arrays.asList(
+        List<String> strings = Arrays.asList(
                 "В Украине есть две горные системы",
                 "- Карпаты и Крымские горы.",
                 "Карпатские горы относительно",
@@ -83,13 +82,13 @@ public class UtilStringsTest {
                 "Например, в Карпатах находится до ",
                 "20% всех лесов Украины.");
         assertThat("Source is text, that contains the several rows with max length",
-                UtilStrings.getMaxStringLength(moreOneList),
-                anyOf(equalTo(Optional.of(moreOneList.get(3))),equalTo(Optional.of(moreOneList.get(4)))));
+                UtilStrings.getMaxStringLength(strings),
+                anyOf(equalTo(Optional.of(strings.get(3))),equalTo(Optional.of(strings.get(4)))));
     }
 
     /*Набор тестов для проверки метода getMaxWordLength - максимальное по длине слово*/
     @Test(expected = IllegalArgumentException.class)
-    public void testMaxWordLengthWitException(){
+    public void testGetMaxWordLength_Null_Exception(){
         assertThat("Source is null",
                 UtilStrings.getMaxWordLength(nullList),
                 equalTo(Optional.empty()));
@@ -97,43 +96,52 @@ public class UtilStringsTest {
 
     /*Набор тестов для проверки метода getMaxWordLength - максимальное по длине слово*/
     @Test
-    public void testMaxWordLength(){
-        singleList = Collections.singletonList("отдых");
-        oneList0 = Arrays.asList("прекрасная погода", "морской бриз",  "Крымские горы");
-        oneList1 = Arrays.asList("морской бриз", "прекрасная погода", "Крымские горы");
-        oneList2 = Arrays.asList("морской бриз", "Крымские горы", "погода прекрасная");
-        moreOneList = Arrays.asList("Крымские горы", "прекрасная природа", "прекрасный день");
-
+    public void testGetMaxWordLength_EmptyList_Empty(){
         assertThat("Source is empty",
                 UtilStrings.getMaxWordLength(emptyList),
                 equalTo(Optional.empty()));
-
+    }
+    @Test
+    public void testGetMaxWordLength_EmptyString_EmptyString(){
         assertThat("Source is empty string",
                 UtilStrings.getMaxWordLength(emptyStringList),
                 equalTo(Optional.of("")));
-
+    }
+    @Test
+    public void testGetMaxWordLength_OneWord_ThisWord(){
+        List<String> singleList = Collections.singletonList("отдых");
         assertThat("Source is a word",
                 UtilStrings.getMaxWordLength(singleList),
                 equalTo(Optional.of(singleList.get(0))));
-
+    }
+    @Test
+    public void testGetMaxWordLength_SeveralStrings_FirstWord(){
+        List<String> strings = Arrays.asList("прекрасная погода", "морской бриз",  "Крымские горы");
         assertThat("The max word is in the begin of string",
-                UtilStrings.getMaxWordLength(oneList0),
+                UtilStrings.getMaxWordLength(strings),
                 equalTo(Optional.of("прекрасная")));
-
+    }
+    @Test
+    public void testGetMaxWordLength_SeveralStrings_WordInMiddle(){
+        List<String> strings = Arrays.asList("морской бриз", "прекрасная погода", "Крымские горы");
         assertThat("The max word is in the middle of string",
-                UtilStrings.getMaxWordLength(oneList1),
+                UtilStrings.getMaxWordLength(strings),
                 equalTo(Optional.of("прекрасная")));
-
+    }
+    @Test
+    public void testGetMaxWordLength_SeveralStrings_LastWord(){
+        List<String> strings = Arrays.asList("морской бриз", "Крымские горы", "погода прекрасная");
         assertThat("The max word is in the end of string",
-                UtilStrings.getMaxWordLength(oneList2),
+                UtilStrings.getMaxWordLength(strings),
                 equalTo(Optional.of("прекрасная")));
-
+    }
+    @Test
+    public void testGetMaxWordLength_SeveralStrings_SeveralMaxWords(){
+        List<String> strings = Arrays.asList("Крымские горы", "прекрасная природа", "прекрасный день");
         assertThat("The string contains more than one max word by length",
-                UtilStrings.getMaxWordLength(moreOneList),
+                UtilStrings.getMaxWordLength(strings),
                 anyOf(equalTo(Optional.of("прекрасная")), equalTo(Optional.of("прекрасный"))));
     }
-
-    /*==================================================================*/
 
     /*Подготовка списков - источников текста*/
     private void setUpLists(){
