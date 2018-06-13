@@ -18,12 +18,6 @@ public class UtilStringsTest {
     private static List<String> nullList;
     private static List<String> emptyList, emptyStringList;
 
-    private List<String> singleList;
-    private List<String> oneList0;
-    private List<String> oneList1;
-    private List<String> oneList2;
-    private List<String> moreOneList;
-
     @BeforeClass
     public static void setUpClass(){
         nullList = null;
@@ -139,38 +133,6 @@ public class UtilStringsTest {
                 anyOf(equalTo(Optional.of("прекрасная")), equalTo(Optional.of("прекрасный"))));
     }
 
-    /*Подготовка списков - источников текста*/
-    private void setUpLists(){
-        singleList = Collections.singletonList("отдых");
-
-        oneList0 = Arrays.asList(
-                "В Украине есть две горные системы - Карпаты и Крымские горы.",
-                "Карпатские горы относительно молодые,",
-                "им более 25 миллионов лет.",
-                "Например, в Карпатах находится до 20%",
-                "всех лесов Украины.");
-        oneList1 = Arrays.asList(
-                "В Украине есть две горные системы",
-                "- Карпаты и Крымские горы.",
-                "Карпатские горы относительно молодые,",
-                "им более 25 миллионов лет.",
-                "Например, в Карпатах находится",
-                " до 20% всех лесов Украины.");
-        oneList2 = Arrays.asList(
-                "В Украине есть две горные системы",
-                "- Карпаты и Крымские горы.",
-                "Карпатские горы относительно молодые,",
-                "им более 25 миллионов лет.",
-                "Например, в Карпатах находится до 20% всех лесов Украины.");
-        moreOneList = Arrays.asList(
-                "В Украине есть две горные системы ",
-                "- Карпаты и Крымские горы.",
-                "Карпатские горы относительно",
-                "молодые, им более 25 миллионов лет",
-                "Например, в Карпатах находится до ",
-                "20% всех лесов Украины.");
-    }
-
     /*Набор тестов для проверки методов getStringsWithMaxLength - поиск строк с максимальной длиной*/
     @Test(expected = IllegalArgumentException.class)
     public void testGetStringsWithMaxLength_Null_Exception(){
@@ -178,8 +140,6 @@ public class UtilStringsTest {
                 UtilStrings.getStringsWithMaxLength(nullList),
                 equalTo(Collections.emptyList()));
     }
-
-    /*Набор тестов для проверки методов getStringsWithMaxLength - поиск строк с максимальной длиной*/
     @Test
     public void testGetStringsWithMaxLength_EmptyList_EmptyList(){
         assertThat("Source is empty",
@@ -253,45 +213,80 @@ public class UtilStringsTest {
 
     /*Набор тестов для проверки методов getStringsOptWithMaxLength - поиск строк с максимальной длиной*/
     @Test(expected = IllegalArgumentException.class)
-    public void testStringsOptWithMaxLengthWithException(){
+    public void testGetStringsOptWithMaxLength_Null_Exception(){
         assertThat("Source is null",
                 UtilStrings.getStringsOptWithMaxLength(nullList),
                 equalTo(Collections.emptyList()));
     }
-
-    /*Набор тестов для проверки методов getStringsOptWithMaxLength - поиск строк с максимальной длиной*/
     @Test
-    public void testStringsOptWithMaxLength(){
-
-        setUpLists();
-
+    public void testGetStringsOptWithMaxLength_EmptyList_Empty(){
         assertThat("Source is empty",
                 UtilStrings.getStringsOptWithMaxLength(emptyList),
                 equalTo(Optional.empty()));
-
+    }
+    @Test
+    public void testGetStringsOptWithMaxLength_ListWithEmptyString_ListWithEmptyString(){
         assertThat("Source is empty string",
                 UtilStrings.getStringsOptWithMaxLength(emptyStringList),
                 equalTo(Optional.of(Collections.singletonList(""))));
-
+    }
+    @Test
+    public void testGetStringsOptWithMaxLength_ListWithOneString_ListWithThisString(){
+        List<String> singleList = Collections.singletonList("отдых");
         assertThat("Source is one string",
                 UtilStrings.getStringsOptWithMaxLength(singleList),
-                equalTo(Optional.of(Collections.singletonList(singleList.get(0)))));
-
+                equalTo(Optional.of(Collections.singletonList(singleList.get(0)))));    }
+    @Test
+    public void testGetStringsOptWithMaxLength_Strings_FirstString(){
+        List<String> strings = Arrays.asList(
+                "В Украине есть две горные системы - Карпаты и Крымские горы.",
+                "Карпатские горы относительно молодые,",
+                "им более 25 миллионов лет.",
+                "Например, в Карпатах находится до 20%",
+                "всех лесов Украины.");
         assertThat("The first line is max",
-                UtilStrings.getStringsOptWithMaxLength(oneList0),
-                equalTo(Optional.of(Collections.singletonList(oneList0.get(0)))));
-
+                UtilStrings.getStringsOptWithMaxLength(strings),
+                equalTo(Optional.of(Collections.singletonList(strings.get(0)))));
+    }
+    @Test
+    public void testGetStringsOptWithMaxLength_Strings_MiddleString(){
+        List<String> strings = Arrays.asList(
+                "В Украине есть две горные системы",
+                "- Карпаты и Крымские горы.",
+                "Карпатские горы относительно молодые,",
+                "им более 25 миллионов лет.",
+                "Например, в Карпатах находится",
+                " до 20% всех лесов Украины.");
         assertThat("The middle line is max",
-                UtilStrings.getStringsOptWithMaxLength(oneList1),
-                equalTo(Optional.of(Collections.singletonList(oneList1.get(2)))));
+                UtilStrings.getStringsOptWithMaxLength(strings),
+                equalTo(Optional.of(Collections.singletonList(strings.get(2)))));
+    }
+    @Test
+    public void testGetStringsOptWithMaxLength_Strings_LastString(){
+        List<String> strings = Arrays.asList(
+                "В Украине есть две горные системы",
+                "- Карпаты и Крымские горы.",
+                "Карпатские горы относительно молодые,",
+                "им более 25 миллионов лет.",
+                "Например, в Карпатах находится до 20% всех лесов Украины.");
 
         assertThat("The last line is max",
-                UtilStrings.getStringsOptWithMaxLength(oneList2),
-                equalTo(Optional.of(Collections.singletonList(oneList2.get(oneList2.size() - 1)))));
-
+                UtilStrings.getStringsOptWithMaxLength(strings),
+                equalTo(Optional.of(Collections.singletonList(strings.get(strings.size() - 1)))));
+    }
+    @Test
+    public void testGetStringsOptWithMaxLength_Strings_SeveralStrings(){
+        List<String> strings = Arrays.asList(
+                "В Украине есть две горные системы ",
+                "- Карпаты и Крымские горы.",
+                "Карпатские горы относительно",
+                "молодые, им более 25 миллионов лет",
+                "Например, в Карпатах находится до ",
+                "20% всех лесов Украины.");
         assertThat("There are several max lines",
-                UtilStrings.getStringsOptWithMaxLength(moreOneList),
-                is(Optional.of(Arrays.asList(moreOneList.get(0), moreOneList.get(3), moreOneList.get(4)))));
+                UtilStrings.getStringsOptWithMaxLength(strings),
+                is(Optional.of(Arrays.asList(strings.get(0), strings.get(3), strings.get(4)))));
+
     }
 
     /*Набор тестов для проверки метода getWordNumberOccurrences, которые генерируют исключение*/
