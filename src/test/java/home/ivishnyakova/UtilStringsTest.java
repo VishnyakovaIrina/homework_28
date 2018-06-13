@@ -36,8 +36,6 @@ public class UtilStringsTest {
     public void testGetMaxStringLength_Null_Exception(){
         assertThat("Source is null", UtilStrings.getMaxStringLength(nullList), equalTo(Optional.empty()));
     }
-
-    /*Набор тестов для проверки метода getMaxStringLength - максимальная по длине строка*/
     @Test
     public void testGetMaxStringLength_EmptyList_Empty(){
         assertThat("Source is empty", UtilStrings.getMaxStringLength(emptyList), equalTo(Optional.empty()));
@@ -93,8 +91,6 @@ public class UtilStringsTest {
                 UtilStrings.getMaxWordLength(nullList),
                 equalTo(Optional.empty()));
     }
-
-    /*Набор тестов для проверки метода getMaxWordLength - максимальное по длине слово*/
     @Test
     public void testGetMaxWordLength_EmptyList_Empty(){
         assertThat("Source is empty",
@@ -177,7 +173,7 @@ public class UtilStringsTest {
 
     /*Набор тестов для проверки методов getStringsWithMaxLength - поиск строк с максимальной длиной*/
     @Test(expected = IllegalArgumentException.class)
-    public void testStringsWithMaxLengthWithException(){
+    public void testGetStringsWithMaxLength_Null_Exception(){
         assertThat("Source is null",
                 UtilStrings.getStringsWithMaxLength(nullList),
                 equalTo(Collections.emptyList()));
@@ -185,38 +181,75 @@ public class UtilStringsTest {
 
     /*Набор тестов для проверки методов getStringsWithMaxLength - поиск строк с максимальной длиной*/
     @Test
-    public void testStringsWithMaxLength(){
-
-        setUpLists();
-
+    public void testGetStringsWithMaxLength_EmptyList_EmptyList(){
         assertThat("Source is empty",
                 UtilStrings.getStringsWithMaxLength(emptyList),
                 equalTo(Collections.emptyList()));
-
+    }
+    @Test
+    public void testGetStringsWithMaxLength_EmptyString_EmptyList(){
         assertThat("Source is empty string",
                 UtilStrings.getStringsWithMaxLength(emptyStringList),
                 equalTo(Collections.singletonList("")));
-
+    }
+    @Test
+    public void testGetStringsWithMaxLength_OneString_ListWithThisString(){
+        List<String> singleList = Collections.singletonList("The country music is good!");
         assertThat("Source is one string",
                 UtilStrings.getStringsWithMaxLength(singleList),
                 equalTo(Collections.singletonList(singleList.get(0))));
-
-        assertThat("The first line is max",
-                UtilStrings.getStringsWithMaxLength(oneList0),
-                equalTo(Collections.singletonList(oneList0.get(0))));
-
-        assertThat("The middle line is max",
-                UtilStrings.getStringsWithMaxLength(oneList1),
-                equalTo(Collections.singletonList(oneList1.get(2))));
-
-        assertThat("The last line is max",
-                UtilStrings.getStringsWithMaxLength(oneList2),
-                equalTo(Collections.singletonList(oneList2.get(oneList2.size() - 1))));
-
-        assertThat("There are several max lines",
-                UtilStrings.getStringsWithMaxLength(moreOneList),
-                is(Arrays.asList(moreOneList.get(0), moreOneList.get(3), moreOneList.get(4))));
     }
+    @Test
+    public void testGetStringsWithMaxLength_Strings_ListWithFirstString(){
+        List<String> strings =  Arrays.asList(
+                "В Украине есть две горные системы - Карпаты и Крымские горы.",
+                "Карпатские горы относительно молодые,",
+                "им более 25 миллионов лет.",
+                "Например, в Карпатах находится до 20%",
+                "всех лесов Украины.");
+        assertThat("The first line is max",
+                UtilStrings.getStringsWithMaxLength(strings),
+                equalTo(Collections.singletonList(strings.get(0))));
+    }
+    @Test
+    public void testGetStringsWithMaxLength_Strings_ListWithMiddleString(){
+        List<String> strings =  Arrays.asList(
+                "В Украине есть две горные системы",
+                "- Карпаты и Крымские горы.",
+                "Карпатские горы относительно молодые,",
+                "им более 25 миллионов лет.",
+                "Например, в Карпатах находится",
+                " до 20% всех лесов Украины.");
+        assertThat("The first line is max",
+                UtilStrings.getStringsWithMaxLength(strings),
+                equalTo(Collections.singletonList(strings.get(2))));
+    }
+    @Test
+    public void testGetStringsWithMaxLength_Strings_ListWithLastString(){
+        List<String> strings =  Arrays.asList(
+                "В Украине есть две горные системы",
+                "- Карпаты и Крымские горы.",
+                "Карпатские горы относительно молодые,",
+                "им более 25 миллионов лет.",
+                "Например, в Карпатах находится до 20% всех лесов Украины.");
+        assertThat("The last line is max",
+                UtilStrings.getStringsWithMaxLength(strings),
+                equalTo(Collections.singletonList(strings.get(strings.size() - 1))));
+    }
+    @Test
+    public void testGetStringsWithMaxLength_Strings_ListWithSeveralString(){
+        List<String> strings =  Arrays.asList(
+                "В Украине есть две горные системы ",
+                "- Карпаты и Крымские горы.",
+                "Карпатские горы относительно",
+                "молодые, им более 25 миллионов лет",
+                "Например, в Карпатах находится до ",
+                "20% всех лесов Украины.");
+        assertThat("There are several max lines",
+                UtilStrings.getStringsWithMaxLength(strings),
+                is(Arrays.asList(strings.get(0), strings.get(3), strings.get(4))));
+    }
+
 
     /*Набор тестов для проверки методов getStringsOptWithMaxLength - поиск строк с максимальной длиной*/
     @Test(expected = IllegalArgumentException.class)
