@@ -1,24 +1,27 @@
 package home.ivishnyakova;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.*;
-
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.AnyOf.anyOf;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 
-
+/*Класс UtilStringsTest содержит тесты для тестирования класса UtilStringsTest
+ (обработка текстовой информации).
+* Автор: Вишнякова И.Н.
+* Дата: 14/06/18
+* */
 public class UtilStringsTest {
 
-    private static List<String> nullList;
-    private static List<String> emptyList, emptyStringList;
-    private static List<String> textSource;
-    private static String stringSource;
+    private static List<String> nullList; //объект = null
+    private static List<String> emptyList,  //список без элементов
+                                emptyStringList; //список с пустой строкой
+    private static List<String> textSource; //текст, в кот. выполняется поиск
+    private static String stringSource; //строка, в кот. выполняется поиск
 
     @BeforeClass
     public static void setUpClass(){
@@ -220,7 +223,6 @@ public class UtilStringsTest {
                 UtilStrings.getStringsWithMaxLength(strings),
                 is(Arrays.asList(strings.get(0), strings.get(3), strings.get(4))));
     }
-
 
     /*Набор тестов для проверки методов getStringsOptWithMaxLength - поиск строк с максимальной длиной*/
     @Test(expected = IllegalArgumentException.class)
