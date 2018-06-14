@@ -18,6 +18,7 @@ public class App
 {
     public static void main(String[] args) {
 
+        //данные поиска
         List<String> strings = Arrays.asList("Отдых на море - это круто","Природа и море",
                 "Пляж и солнце, море1, море2","Шашлык и природа","Море и пляж",
                 "Жара и море","Лето и отдых","Берег моря", "Скучаю по Черному морю...");
@@ -27,14 +28,20 @@ public class App
         strings.forEach(System.out::println);
         System.out.println("------------== ==--------------");
 
+        //------- Самая длинная строка -----------------------------
+
         UtilStrings.getMaxStringLength(strings).ifPresent(
                 (str) -> System.out.println("Строка макс.длины - " + str +
                         ", длина = " + str.length()
                 ));
 
+        //------- Самое длинное слово -----------------------------
+
         String maxWord = UtilStrings.getMaxWordLength(strings).orElse("Не найдено");
         System.out.println("Слово с максим.длиной = " + maxWord +
                 ", длина = " + maxWord.length());
+
+        //------- Кол-во вхождений слова в текст -----------------------------
 
         List<String> oneMaxList0 = Arrays.asList(
                 "В Украине есть две горные системы - Карпаты и Крымские горы.",
@@ -45,6 +52,8 @@ public class App
         String searchLine = "горы";
         long occurrences = UtilStrings.getWordNumberOccurrences(oneMaxList0, searchLine);
         System.out.println("Кол-во вхождений шаблона \"" + searchLine +"\" = " + occurrences);
+
+        //------- Список самых длинных строк -----------------------------
 
         List<String> maxLengthStrings = UtilStrings.getStringsWithMaxLength(strings);
         System.out.println("Строки максимальной длины: \nВариант 1");
