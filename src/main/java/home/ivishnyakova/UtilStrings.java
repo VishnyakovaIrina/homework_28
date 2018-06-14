@@ -20,6 +20,11 @@ public class UtilStrings {
     * то возвращается любая (порядок не гарантирован).*/
     public static Optional<String> getMaxStringLength(List<String> strings){
         List<String> stringsOpt = Optional.ofNullable(strings).orElseThrow(IllegalArgumentException::new);
+
+        if (stringsOpt.isEmpty()){
+            return Optional.empty();
+        }
+
         return stringsOpt.stream()
                 .reduce( (String a, String b) -> a.length() > b.length() ? a : b
         );
@@ -29,6 +34,11 @@ public class UtilStrings {
     * Возвращает Optional<String> - найденное слово или пустой Optional*/
     public static Optional<String> getMaxWordLength(List<String> strings){
         List<String> stringsOpt = Optional.ofNullable(strings).orElseThrow(IllegalArgumentException::new);
+
+        if (stringsOpt.isEmpty()){
+            return Optional.empty();
+        }
+        
         return stringsOpt
                 .stream()
                 .flatMap(s -> Arrays.stream(s.split("[^а-яА-Яa-zA-Z]")))
@@ -39,6 +49,11 @@ public class UtilStrings {
     которые имеют максимальную длину.*/
     public static List<String> getStringsWithMaxLength(List<String> strings){
         List<String> stringsOpt = Optional.ofNullable(strings).orElseThrow(IllegalArgumentException::new);
+
+        if (stringsOpt.isEmpty()){
+            return Collections.emptyList();
+        }
+
         int maxLength = getMaxStringLength(stringsOpt).orElse("").length();
         return stringsOpt.stream()
                 .parallel()
@@ -50,6 +65,10 @@ public class UtilStrings {
     содержащий список строк из strings, которые имеют максимальную длину.*/
     public static Optional<List<String>> getStringsOptWithMaxLength(List<String> strings){
         List<String> stringsOpt = Optional.ofNullable(strings).orElseThrow(IllegalArgumentException::new);
+
+        if (stringsOpt.isEmpty()){
+            return Optional.empty();
+        }
 
         //сгруппировать строки по длине
         Map<Integer,List<String>> res = stringsOpt
